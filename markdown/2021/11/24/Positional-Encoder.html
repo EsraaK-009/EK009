@@ -8,17 +8,17 @@
 <meta name="generator" content="Jekyll v4.1.1" />
 <meta property="og:title" content="Positional Encoder" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Positional Encoder" />
-<meta property="og:description" content="Positional Encoder" />
-<link rel="canonical" href="https://esraak-009.github.io/EK009/2021/11/24/Positional-Encoder.html" />
-<meta property="og:url" content="https://esraak-009.github.io/EK009/2021/11/24/Positional-Encoder.html" />
+<meta name="description" content="A minimal example of using markdown with fastpages." />
+<meta property="og:description" content="A minimal example of using markdown with fastpages." />
+<link rel="canonical" href="https://esraak-009.github.io/EK009/markdown/2021/11/24/Positional-Encoder.html" />
+<meta property="og:url" content="https://esraak-009.github.io/EK009/markdown/2021/11/24/Positional-Encoder.html" />
 <meta property="og:site_name" content="From Scratch" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2021-11-24T08:00:00-06:00" />
+<meta property="article:published_time" content="2021-11-24T00:00:00-06:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Positional Encoder" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2021-11-24T08:00:00-06:00","datePublished":"2021-11-24T08:00:00-06:00","description":"Positional Encoder","headline":"Positional Encoder","mainEntityOfPage":{"@type":"WebPage","@id":"https://esraak-009.github.io/EK009/2021/11/24/Positional-Encoder.html"},"url":"https://esraak-009.github.io/EK009/2021/11/24/Positional-Encoder.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2021-11-24T00:00:00-06:00","datePublished":"2021-11-24T00:00:00-06:00","description":"A minimal example of using markdown with fastpages.","headline":"Positional Encoder","mainEntityOfPage":{"@type":"WebPage","@id":"https://esraak-009.github.io/EK009/markdown/2021/11/24/Positional-Encoder.html"},"url":"https://esraak-009.github.io/EK009/markdown/2021/11/24/Positional-Encoder.html"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/EK009/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://esraak-009.github.io/EK009/feed.xml" title="From Scratch" /><link rel="shortcut icon" type="image/x-icon" href="/EK009/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
@@ -73,7 +73,7 @@ window.onload = wrap_img;
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">Positional Encoder</h1><p class="page-description">Positional Encoder</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-11-24T08:00:00-06:00" itemprop="datePublished">
+    <h1 class="post-title p-name" itemprop="name headline">Positional Encoder</h1><p class="page-description">A minimal example of using markdown with fastpages.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-11-24T00:00:00-06:00" itemprop="datePublished">
         Nov 24, 2021
       </time>
        • <span class="read-time" title="Estimated read time">
@@ -84,11 +84,27 @@ window.onload = wrap_img;
 </span></p>
 
     
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/EK009/categories/#markdown">markdown</a>
+        
+      
+      </p>
+    
 
     </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    <h2 id="positional-encoder">Positional Encoder</h2>
+    <ul id="toc" class="section-nav">
+<li class="toc-entry toc-h2"><a href="#positional-encoder">Positional Encoder</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#%D9%84%D9%8A%D9%87-%D8%A7%D9%84%D9%80sin-%D9%88-%D8%A7%D9%84%D9%80cos-">ليه الـsin و الـcos? </a></li>
+<li class="toc-entry toc-h3"><a href="#%D9%84%D9%8A%D9%87-%D8%A8%D9%86%D9%82%D8%B3%D9%85-%D8%B9%D9%84%D9%89-10000-">ليه بنقسم على 10000؟ </a></li>
+<li class="toc-entry toc-h3"><a href="#-%D9%85%D8%B5%D8%A7%D8%AF%D8%B1"> مصادر:</a></li>
+</ul>
+</li>
+</ul><h2 id="positional-encoder">
+<a class="anchor" href="#positional-encoder" aria-hidden="true"><span class="octicon octicon-link"></span></a>Positional Encoder</h2>
 
 <p dir="rtl" align="right">
 مكان الكلمة في الجملة من الحاجات المهمة جدًا لينا عشان نفهم معناها و كمان بتأثر على القواعد فعشان كده محتاجين الموديل يحافظ عليها و يحطها في حساباته و هو بيترجم أو بيعمل أي عملية تانية.
@@ -112,12 +128,13 @@ window.onload = wrap_img;
 الحل اللي قدمته Attention is all you need بسيط جدًا و في نفس الوقت مبهر،  باستخدام الـwave frequency بيعملوا encoding خاص لكل مكان في الجملة و فكرته ذكية جدًا عشان بيحقق كل الحاجات المطلوبة 
 </p>
 
-<p><img src="/EK009/images/Encoder/equation.png" alt="Equation" />
-<img src="/EK009/images/Encoder/vector.png" alt="Vector" /></p>
+<p><img src="/EK009/images/Encoder/equation.png" alt="Equation">
+<img src="/EK009/images/Encoder/vector.png" alt="Vector"></p>
 
-<hr />
+<hr>
 
-<h3 dir="rtl" align="right">ليه الـsin و الـcos? </h3>
+<h3 dir="rtl" align="right">
+<a class="anchor" href="#%D9%84%D9%8A%D9%87-%D8%A7%D9%84%D9%80sin-%D9%88-%D8%A7%D9%84%D9%80cos-" aria-hidden="true"><span class="octicon octicon-link"></span></a>ليه الـsin و الـcos? </h3>
 
 <p dir="rtl" align="right">
 احنا عاوزين حاجة تدينا رقم unique و في نفس الوقت مش كبير و له حدود، الـsin و الـcos بيكون الrange من 1 لـ -1 و كمان فكرة الترددات بتخليها تمسك أقل أقل تغير في المكان. كأنها زرار بيعلي الصوت بس مش discrete لأ، شبه الراديو القديم كل ما تعلي سِنة صغيرة بيتغير. 
@@ -128,25 +145,26 @@ window.onload = wrap_img;
 عشان يتغلبوا على النقطة دي بيكون الـfrequency قليل جدًا جدًا كل ما عدد الـindex بيزيد و عشان كده المعادلة في الصورة دي  بتعمل geometric progression. دي حاجة تانية بس باختصار كمثال عليها إننا بنمشي بتتابع بيقل مع كل خطوة. مثال: [ 1 , 1/2 , 1/4 , 1/8 , ...] 
 </p>
 
-<p><img src="/EK009/images/Encoder/index.png" alt="Waves" /></p>
+<p><img src="/EK009/images/Encoder/index.png" alt="Waves"></p>
 
 <p dir="rtl" align="right">
 في الصورة دي شكل لأربعة dim. بس، و لكن الـمتجه في العادي بيبقى أكبر من كده بكتير، فالصورة بتكون أعقد بكتير و فعلًا unique لكل position و بتبقى مترتبة في صورة matrix بحيث يقدر يلقط التغيرات
 </p>
 
-<hr />
+<hr>
 
-<h3 dir="rtl" align="right">ليه بنقسم على 10000؟ </h3>
+<h3 dir="rtl" align="right">
+<a class="anchor" href="#%D9%84%D9%8A%D9%87-%D8%A8%D9%86%D9%82%D8%B3%D9%85-%D8%B9%D9%84%D9%89-10000-" aria-hidden="true"><span class="octicon octicon-link"></span></a>ليه بنقسم على 10000؟ </h3>
 
-<p><img src="/EK009/images/Encoder/why10000.png" alt="10000" /></p>
+<p><img src="/EK009/images/Encoder/why10000.png" alt="10000"></p>
 
 <p dir="rtl" align="right">
 في حاجة لطيفة تانية، في البيبر نفسها في السطر الموجود فيه المعادلة بتقول إنهم اختاروا المعادلة دي لسبب تاني إنها هينفع مع الـrelative position encoding بسبب اثبات ما هحطه اللينك، بس ده مهم ليه؟ عشان البيبر مكانتش معمولة كهدف للـtext بس، احنا لسه عندنا graphs و أنواع داتا مختلفة كتير. فهما اختاروها عشان كده كمان.
 </p>
 
-<p><img src="/EK009/images/Encoder/why_eq.png" alt="why_eq" /></p>
+<p><img src="/EK009/images/Encoder/why_eq.png" alt="why_eq"></p>
 
-<hr />
+<hr>
 
 <p dir="rtl" align="right">
 الكود باستخدام numpy: 
@@ -164,9 +182,10 @@ window.onload = wrap_img;
       
   <span class="k">return</span> <span class="n">POS</span>
 </code></pre></div></div>
-<hr />
+<hr>
 
-<h3 dir="rtl" align="right"> مصادر:</h3>
+<h3 dir="rtl" align="right">
+<a class="anchor" href="#-%D9%85%D8%B5%D8%A7%D8%AF%D8%B1" aria-hidden="true"><span class="octicon octicon-link"></span></a> مصادر:</h3>
 
 <ul>
   <li><a>https://kazemnejad.com/blog/transformer_architecture_positional_encoding/</a></li>
@@ -178,7 +197,7 @@ window.onload = wrap_img;
   <li><a>https://medium.com/swlh/elegant-intuitions-behind-positional-encodings-dc48b4a4a5d1</a></li>
 </ul>
 
-  </div><a class="u-url" href="/EK009/2021/11/24/Positional-Encoder.html" hidden></a>
+  </div><a class="u-url" href="/EK009/markdown/2021/11/24/Positional-Encoder.html" hidden></a>
 </article>
 
       </div>
