@@ -4,8 +4,6 @@ title: Positional Encoder
 description: Positional Encoder in Arabic
 tags: Arabic
 toc: true
-layout: post
-description: A minimal example of using markdown with fastpages.
 categories: [transformer]
 #image: /img/foo/bar.png
 ---
