@@ -31,8 +31,8 @@ tags: Arabic
 الحل اللي قدمته Attention is all you need بسيط جدًا و في نفس الوقت مبهر،  باستخدام الـwave frequency بيعملوا encoding خاص لكل مكان في الجملة و فكرته ذكية جدًا عشان بيحقق كل الحاجات المطلوبة 
 </p>
 
-![Equation]({{ site.baseurl }}/Photos/Encoder/equation.png)
-![Vector]({{ site.baseurl }}/Photos/Encoder/vector.png)
+![Equation]({{ site.baseurl }}/images/Encoder/equation.png)
+![Vector]({{ site.baseurl }}/images/Encoder/vector.png)
 
 ----
  
@@ -47,7 +47,7 @@ tags: Arabic
 عشان يتغلبوا على النقطة دي بيكون الـfrequency قليل جدًا جدًا كل ما عدد الـindex بيزيد و عشان كده المعادلة في الصورة دي  بتعمل geometric progression. دي حاجة تانية بس باختصار كمثال عليها إننا بنمشي بتتابع بيقل مع كل خطوة. مثال: [ 1 , 1/2 , 1/4 , 1/8 , ...] 
 </p>
 
-![Waves]({{ site.baseurl }}/Photos/Encoder/index.png)
+![Waves]({{ site.baseurl }}/images/Encoder/index.png)
 
 
 <p dir='rtl' align='right'>
@@ -59,13 +59,13 @@ tags: Arabic
 <h3 dir='rtl' align='right'>ليه بنقسم على 10000؟ </h3>
 
 
-![10000]({{ site.baseurl }}/Photos/Encoder/why10000.png)
+![10000]({{ site.baseurl }}/images/Encoder/why10000.png)
 
 <p dir='rtl' align='right'>
 في حاجة لطيفة تانية، في البيبر نفسها في السطر الموجود فيه المعادلة بتقول إنهم اختاروا المعادلة دي لسبب تاني إنها هينفع مع الـrelative position encoding بسبب اثبات ما هحطه اللينك، بس ده مهم ليه؟ عشان البيبر مكانتش معمولة كهدف للـtext بس، احنا لسه عندنا graphs و أنواع داتا مختلفة كتير. فهما اختاروها عشان كده كمان.
 </p>
 
-![why_eq]({{ site.baseurl }}/Photos/Encoder/why_eq.png)
+![why_eq]({{ site.baseurl }}/images/Encoder/why_eq.png)
 
 ----
 
