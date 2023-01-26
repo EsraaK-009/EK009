@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Arabic Topic Modeling with Textacy And Spacy-udpipe | From Scratch</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Arabic Topic Modeling with Textacy And Spacy-udpipe" />
+<meta name="author" content="Esraa Khaled" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Textacy for sure is a powerful Library to use with NLP, but if you open the docs you’ll find it doesn’t support any lanuage that spacy doesn’t support, this notebook is a simple introduction to use textacy for Arabic language or any other language that spacy doesn’t have a model for it til now." />
+<meta property="og:description" content="Textacy for sure is a powerful Library to use with NLP, but if you open the docs you’ll find it doesn’t support any lanuage that spacy doesn’t support, this notebook is a simple introduction to use textacy for Arabic language or any other language that spacy doesn’t have a model for it til now." />
+<link rel="canonical" href="https://esraak-009.github.io/EK009/fastpages/jupyter/2023/01/26/Arabic-TopicModeling-With-Textacy.html" />
+<meta property="og:url" content="https://esraak-009.github.io/EK009/fastpages/jupyter/2023/01/26/Arabic-TopicModeling-With-Textacy.html" />
+<meta property="og:site_name" content="From Scratch" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-01-26T00:00:00-06:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Arabic Topic Modeling with Textacy And Spacy-udpipe" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Esraa Khaled"},"dateModified":"2023-01-26T00:00:00-06:00","datePublished":"2023-01-26T00:00:00-06:00","description":"Textacy for sure is a powerful Library to use with NLP, but if you open the docs you’ll find it doesn’t support any lanuage that spacy doesn’t support, this notebook is a simple introduction to use textacy for Arabic language or any other language that spacy doesn’t have a model for it til now.","headline":"Arabic Topic Modeling with Textacy And Spacy-udpipe","mainEntityOfPage":{"@type":"WebPage","@id":"https://esraak-009.github.io/EK009/fastpages/jupyter/2023/01/26/Arabic-TopicModeling-With-Textacy.html"},"url":"https://esraak-009.github.io/EK009/fastpages/jupyter/2023/01/26/Arabic-TopicModeling-With-Textacy.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/EK009/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://esraak-009.github.io/EK009/feed.xml" title="From Scratch" /><link rel="shortcut icon" type="image/x-icon" href="/EK009/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/EK009/">From Scratch</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/EK009/about/">About Me</a><a class="page-link" href="/EK009/search/">Search</a><a class="page-link" href="/EK009/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Arabic Topic Modeling with Textacy And Spacy-udpipe</h1><p class="page-description">Textacy for sure is a powerful Library to use with NLP, but if you open the docs you'll find it doesn't support any lanuage that spacy doesn't support, this notebook is a simple introduction to use textacy for Arabic language or any other language that spacy doesn't have a model for it til now.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2023-01-26T00:00:00-06:00" itemprop="datePublished">
+        Jan 26, 2023
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Esraa Khaled</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      3 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/EK009/categories/#fastpages">fastpages</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/EK009/categories/#jupyter">jupyter</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-justify-center">
+          <div class="px-2">
+
+    <a href="https://github.com/EsraaK-009/EK009/tree/master/_notebooks/2023-01-26-Arabic-TopicModeling-With-Textacy.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/EK009/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/EsraaK-009/EK009/master?filepath=_notebooks%2F2023-01-26-Arabic-TopicModeling-With-Textacy.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/EK009/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/EsraaK-009/EK009/blob/master/_notebooks/2023-01-26-Arabic-TopicModeling-With-Textacy.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/EK009/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+          <div class="px-2">
+  <a href="https://deepnote.com/launch?url=https%3A%2F%2Fgithub.com%2FEsraaK-009%2FEK009%2Fblob%2Fmaster%2F_notebooks%2F2023-01-26-Arabic-TopicModeling-With-Textacy.ipynb" target="_blank">
+      <img class="notebook-badge-image" src="/EK009/assets/badges/deepnote.svg" alt="Launch in Deepnote"/>
+  </a>
+</div>
+
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul id="toc" class="section-nav">
+<li class="toc-entry toc-h2"><a href="#Downloading-udpipe-model">Downloading udpipe model </a></li>
+<li class="toc-entry toc-h2"><a href="#Topic-Modeling">Topic Modeling </a></li>
+<li class="toc-entry toc-h2"><a href="#Model-Inspection:">Model Inspection: </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2023-01-26-Arabic-TopicModeling-With-Textacy.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="o">%%</span><span class="n">capture</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">spacy</span><span class="o">-</span><span class="n">udpipe</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">textacy</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Downloading-udpipe-model">
+<a class="anchor" href="#Downloading-udpipe-model" aria-hidden="true"><span class="octicon octicon-link"></span></a>Downloading udpipe model<a class="anchor-link" href="#Downloading-udpipe-model"> </a>
+</h2>
+<blockquote>
+<p>First, we have to install the Arabic model from this link:<a href="https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-3131">Models</a> And upload it to our colab notebook.</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="kn">import</span> <span class="nn">spacy_udpipe</span>
+<span class="kn">import</span> <span class="nn">textacy</span>
+<span class="kn">import</span> <span class="nn">textacy.tm</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/usr/local/lib/python3.8/dist-packages/torch/cuda/__init__.py:497: UserWarning: Can't initialize NVML
+  warnings.warn("Can't initialize NVML")
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Already downloaded a model for the 'ar' language
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy_udpipe</span><span class="o">.</span><span class="n">load_from_path</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">"ar"</span><span class="p">,</span>
+                                  <span class="n">path</span><span class="o">=</span><span class="s2">"./arabic-padt-ud-2.5-191206.udpipe"</span><span class="p">,</span>
+                                  <span class="n">meta</span><span class="o">=</span><span class="p">{</span><span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Custom 'ar' model"</span><span class="p">})</span>
+<span class="n">text</span> <span class="o">=</span> <span class="s2">"القاهرة هي المكان المفضل لدي"</span>
+
+<span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">token</span><span class="o">.</span><span class="n">lemma_</span><span class="p">,</span> <span class="n">token</span><span class="o">.</span><span class="n">pos_</span><span class="p">,</span> <span class="n">token</span><span class="o">.</span><span class="n">dep_</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>القاهرة قَاهِرَة NOUN nsubj
+هي هُوَ PRON nmod
+المكان مَكَان NOUN ROOT
+المفضل المفضل ADJ amod
+لدي لَدَى ADP case
+ي هُوَ PRON nmod
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<blockquote>
+<p>Now we have our model as "nlp" and we can use it with many other libraries.</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"/content/Without_namesAndSW.csv"</span><span class="p">)</span>
+<span class="c1">#df.info()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Topic-Modeling">
+<a class="anchor" href="#Topic-Modeling" aria-hidden="true"><span class="octicon octicon-link"></span></a>Topic Modeling<a class="anchor-link" href="#Topic-Modeling"> </a>
+</h2>
+<p>To get the topics we need to go through these steps:</p>
+<ul>
+<li>To make it easy and use the options we have in textacy we'll convert our data to textacy's corpus. </li>
+<li>Get tokens of every document.</li>
+<li>Specify the vectorizer we want.</li>
+<li>Make the doc-term-matrix. <strong>Note: This matrix can be used with gensim models if you Transpose it.</strong>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">corpus</span> <span class="o">=</span> <span class="n">textacy</span><span class="o">.</span><span class="n">Corpus</span><span class="p">(</span><span class="n">nlp</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">'No_stopWords'</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">corpus</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Corpus(29 docs, 44526 tokens)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">tokenized_docs</span> <span class="o">=</span> <span class="p">(</span>
+   <span class="p">(</span><span class="n">term</span><span class="o">.</span><span class="n">lemma_</span> <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">textacy</span><span class="o">.</span><span class="n">extract</span><span class="o">.</span><span class="n">terms</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">ngs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ents</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">corpus</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">vectorizer</span> <span class="o">=</span> <span class="n">textacy</span><span class="o">.</span><span class="n">representations</span><span class="o">.</span><span class="n">vectorizers</span><span class="o">.</span><span class="n">Vectorizer</span><span class="p">(</span>
+   <span class="n">tf_type</span><span class="o">=</span><span class="s2">"linear"</span><span class="p">,</span> <span class="n">idf_type</span><span class="o">=</span><span class="s2">"smooth"</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s2">"l2"</span><span class="p">,</span>
+    <span class="n">min_df</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_df</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Another Note: You can get the id2word dictionary also from the vectorizer here and use it with your code.</strong></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">id2word</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">id_to_term</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">doc_term_matrix</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">tokenized_docs</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">doc_term_matrix</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&lt;29x1185 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+	with 9628 stored elements in Compressed Sparse Row format&gt;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">textacy</span><span class="o">.</span><span class="n">tm</span><span class="o">.</span><span class="n">topic_model</span><span class="o">.</span><span class="n">TopicModel</span><span class="p">(</span><span class="s2">"nmf"</span><span class="p">,</span> <span class="n">n_topics</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">doc_term_matrix</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/usr/local/lib/python3.8/dist-packages/sklearn/decomposition/_nmf.py:1422: FutureWarning: `alpha` was deprecated in version 1.0 and will be removed in 1.2. Use `alpha_W` and `alpha_H` instead
+  warnings.warn(
+/usr/local/lib/python3.8/dist-packages/sklearn/decomposition/_nmf.py:289: FutureWarning: The 'init' value, when 'init=None' and n_components is less than n_samples and n_features, will be changed from 'nndsvd' to 'nndsvda' in 1.1 (renaming of 0.26).
+  warnings.warn(
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">model</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>TopicModel(n_topics=4, model=NMF)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Model-Inspection:">
+<a class="anchor" href="#Model-Inspection:" aria-hidden="true"><span class="octicon octicon-link"></span></a>Model Inspection:<a class="anchor-link" href="#Model-Inspection:"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Top Topic Terms:</strong></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">doc_topic_matrix</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">doc_term_matrix</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">topic_idx</span><span class="p">,</span> <span class="n">top_terms</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">top_topic_terms</span><span class="p">(</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">id_to_term</span><span class="p">,</span> <span class="n">topics</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]):</span>
+     <span class="nb">print</span><span class="p">(</span><span class="s2">"topic"</span><span class="p">,</span> <span class="n">topic_idx</span><span class="p">,</span> <span class="s2">":"</span><span class="p">,</span> <span class="s2">"   "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">top_terms</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>topic 0 : بَنك   حِسَاب   المدعى   اِعتِمَاد   مَبلَغ   فَائِدَة   شَرِكَة   تَارِيخ   خَبِير   مَديُونِيَّة
+topic 1 : أُجرَة   ـ   وَفَاء   مَستاجَر   بالاجرة   تَكلِيف   تَكرَار   إِعلَان   اِستِئنَاف   إِخلَاء
+topic 2 : شَرِكَة   أَوَّل   قَرَار   جَمعِيَّة   شَرِيك   تَصفِيَة   عَمَل   إِدَارَة   ثَانِي   87
+topic 3 : اَلَّذِي   2002   تَابَع   يكفى   دَفع   قَول   تَحقِيق   قِسم   اِثنَان   وكفايت
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/usr/local/lib/python3.8/dist-packages/sklearn/decomposition/_nmf.py:1422: FutureWarning: `alpha` was deprecated in version 1.0 and will be removed in 1.2. Use `alpha_W` and `alpha_H` instead
+  warnings.warn(
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Topic Weights:</strong></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">topic_weights</span><span class="p">(</span><span class="n">doc_topic_matrix</span><span class="p">)):</span>
+     <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>0 0.33786064340985056
+1 0.4085472464974949
+2 0.13763662553716402
+3 0.11595548455549054
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Documents Topics:</strong></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="k">for</span> <span class="n">doc_idx</span><span class="p">,</span> <span class="n">topics</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">top_doc_topics</span><span class="p">(</span><span class="n">doc_topic_matrix</span><span class="p">):</span>
+     <span class="nb">print</span><span class="p">(</span><span class="s2">"Doc ID: "</span><span class="p">,</span> <span class="n">doc_idx</span><span class="p">,</span><span class="s2">":"</span><span class="p">,</span> <span class="n">topics</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>ID:  0 : (0, 3, 2)
+ID:  1 : (0, 2, 3)
+ID:  2 : (0, 2, 3)
+ID:  3 : (0, 3, 2)
+ID:  4 : (0, 3, 2)
+ID:  5 : (0, 3, 2)
+ID:  6 : (0, 3, 2)
+ID:  7 : (0, 3, 2)
+ID:  8 : (0, 3, 2)
+ID:  9 : (0, 2, 3)
+ID:  10 : (3, 2, 0)
+ID:  11 : (0, 2, 3)
+ID:  12 : (0, 2, 3)
+ID:  13 : (3, 2, 0)
+ID:  14 : (0, 3, 2)
+ID:  15 : (0, 1, 3)
+ID:  16 : (0, 1, 3)
+ID:  17 : (0, 1, 3)
+ID:  18 : (0, 1, 3)
+ID:  19 : (0, 1, 2)
+ID:  20 : (0, 1, 3)
+ID:  21 : (0, 2, 1)
+ID:  22 : (0, 1, 3)
+ID:  23 : (0, 1, 3)
+ID:  24 : (0, 1, 3)
+ID:  25 : (0, 1, 3)
+ID:  26 : (0, 1, 2)
+ID:  27 : (0, 2, 1)
+ID:  28 : (0, 2, 1)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="c1">#                    topics=-1,  n_terms=25, sort_terms_by="seriation")</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"nmf-4topics.pkl"</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="EsraaK-009/EK009"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/EK009/fastpages/jupyter/2023/01/26/Arabic-TopicModeling-With-Textacy.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/EK009/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="https://esraak-009.github.io/EK009/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/EK009/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>I try to figure out how things work and learn.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li>
+  <a href="/feed.xml" target="_blank" title="rss">
+    <svg class="svg-icon grey">
+      <use xlink:href="/EK009/assets/minima-social-icons.svg#rss"></use>
+    </svg>
+  </a>
+</li>
+<li>
+  <a rel="me" href="https://github.com/EsraaK-009" target="_blank" title="github">
+    <svg class="svg-icon grey">
+      <use xlink:href="/EK009/assets/minima-social-icons.svg#github"></use>
+    </svg>
+  </a>
+</li>
+<li>
+  <a rel="me" href="https://twitter.com/EsraaK_009" target="_blank" title="twitter">
+    <svg class="svg-icon grey">
+      <use xlink:href="/EK009/assets/minima-social-icons.svg#twitter"></use>
+    </svg>
+  </a>
+</li>
+<li>
+  <a rel="me" href="https://www.linkedin.com/in/esraakhaled3012/" target="_blank" title="linkedin">
+    <svg class="svg-icon grey">
+      <use xlink:href="/EK009/assets/minima-social-icons.svg#linkedin"></use>
+    </svg>
+  </a>
+</li>
+</ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
